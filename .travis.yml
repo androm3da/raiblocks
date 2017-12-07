@@ -17,9 +17,11 @@ addons:
 #       key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
       - ubuntu-toolchain-r-test 
       - llvm-toolchain-trusty-5.0 
+      - sourceline: 'ppa:kojoley/boost'
+
     packages:
       - cmake
-      - libboost-all-dev
+      - libboost1.58-all-dev
       - ninja-build
       - g++-7
 #     - clang-5.0
