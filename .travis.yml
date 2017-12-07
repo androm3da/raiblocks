@@ -22,13 +22,13 @@ addons:
     packages:
       - cmake
 #     - libboost-all-dev
-      - libboost-date_time1.58-dev
       - libboost-filesystem1.58-dev
       - libboost-system1.58-dev
       - libboost-log1.58-dev
-      - libboost-log_setup1.58-dev
       - libboost-thread1.58-dev
-      - libboost-program_options1.58-dev
+#     - libboost-program_options1.58-dev
+#     - libboost-log_setup1.58-dev
+#     - libboost-date_time1.58-dev
       - libboost-regex1.58-dev
       - libboost-chrono1.58-dev
       - libboost-atomic1.58-dev
