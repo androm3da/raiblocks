@@ -11,19 +11,48 @@ configuration:
 image:
   - Visual Studio 2017
 
+# https://www.appveyor.com/docs/build-environment/#boost 
+
+environment:
+    MSVC_DEFAULT_OPTIONS: ON
+    BOOST_ROOT: C:\Libraries\boost_1_58_0
+    BOOST_LIBRARYDIR: C:\Libraries\boost_1_58_0\lib32-msvc-14.0
+    matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: Visual Studio 14 2015
+      VISUAL_STUDIO_INTERNAL_VERSION: 140
+      VISUAL_STUDIO_VERSION: 14.0
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: Visual Studio 15 2017
+      VISUAL_STUDIO_INTERNAL_VERSION: 141
+      VISUAL_STUDIO_VERSION: 14.1
+
+
 before_build:
   - ps: |
       mkdir build
       cd build
       $env:generator="Visual Studio 15 2017"
-      if ($env:PLATFORM -eq "x64") {
-          $env:generator="$env:generator Win64"
+      If ($env:Platform -Match "x86") {
+        $env:ARCHITECTURE="32"
+      } Else {
+        $env:ARCHITECTURE="64"
+        $env:CMAKE_GENERATOR_SUFFIX=" Win64"
       }
-      echo generator="$env:generator"
-      cmake .. -G "$env:generator"
+
+      $env:BOOST_ROOT="C:/Libraries/boost_$($env:BOOST_FILENAME_VERSION)"
+      $env:BOOST_INCLUDEDIR="$($env:BOOST_ROOT)"
+      $env:BOOST_LIBRARYDIR="$($env:BOOST_ROOT)/$($env:LIB_ARCHITECTURE)-msvc-$($env:VISUAL_STUDIO_VERSION)"
+      $env:BOOST_ARCHIVE="boost_$($env:BOOST_FILENAME_VERSION)-bin-msvc-$($env:VISUAL_STUDIO_VERSION)-$($env:ARCHITECTURE).7z"
+
+
+  - cmd: md build
+  - cmd: cd build
+  - cmd: cmake -G "%CMAKE_GENERATOR%%CMAKE_GENERATOR_SUFFIX%" -DCMAKE_BUILD_TYPE=%configuration% -DRAIBLOCKS_TEST=ON ..
+
 
 build_script:
-  - cmake --build . --config %CONFIGURATION% -DRAIBLOCKS_TEST=ON -- /m /v:minimal
+  - cmake --build .  -- /m /v:minimal
 
 test_script:
   - build\core_test
