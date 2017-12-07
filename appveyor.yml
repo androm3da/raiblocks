@@ -1,4 +1,4 @@
-shallow_clone: true
+shallow_clone: false
 
 platform:
   - x86
@@ -10,17 +10,6 @@ configuration:
 
 image:
   - Visual Studio 2017
-
-clone_script:
-- ps: |
-    if(-not $env:appveyor_pull_request_number) {
-        git clone -q --branch=$env:appveyor_repo_branch https://github.com/$env:appveyor_repo_name.git $env:appveyor_build_folder
-        git checkout -qf $env:appveyor_repo_commit
-    } else {
-        git clone -q https://github.com/$env:appveyor_repo_name.git $env:appveyor_build_folder
-        git fetch -q origin +refs/pull/$env:appveyor_pull_request_number/merge:
-        git checkout -qf FETCH_HEAD
-    }
 
 # https://www.appveyor.com/docs/build-environment/#boost 
 
@@ -57,7 +46,7 @@ before_build:
       $env:BOOST_LIBRARYDIR="$($env:BOOST_ROOT)/$($env:LIB_ARCHITECTURE)-msvc-$($env:VISUAL_STUDIO_VERSION)"
       $env:BOOST_ARCHIVE="boost_$($env:BOOST_FILENAME_VERSION)-bin-msvc-$($env:VISUAL_STUDIO_VERSION)-$($env:ARCHITECTURE).7z"
 
-      echo cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DRAIBLOCKS_TEST=ON ..
+      echo cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_LIBRARYDIR="$($env:BOOST_LIBRARYDIR)" -DBOOST_INCLUDEDIR="$($env:BOOST_INCLUDEDIR)"  -DRAIBLOCKS_TEST=ON ..
 
       cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_LIBRARYDIR="$($env:BOOST_LIBRARYDIR)" -DBOOST_INCLUDEDIR="$($env:BOOST_INCLUDEDIR)"  -DRAIBLOCKS_TEST=ON ..
 
@@ -70,9 +59,9 @@ test_script:
 
 deploy: off
 
+# Write the CMake output and error logs to the console
 on_failure:
   - ps: |
-      # Write the CMake output and error logs to the console
       If ($env:CONFIGURATION_COMPLETE -eq "False") {
         If (Test-Path build/CMakeFiles/CMakeOutput.log) {
           Write-Output "CMakeOutput.log"
