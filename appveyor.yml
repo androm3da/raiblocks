@@ -26,7 +26,7 @@ build_script:
   - cmake --build . --config %CONFIGURATION% -DRAIBLOCKS_TEST=ON -- /m /v:minimal
 
 test_script:
-  - core_test
+  - build\core_test
 
 deploy: off
 
