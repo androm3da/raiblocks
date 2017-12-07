@@ -1,0 +1,39 @@
+
+sudo: false
+language: cpp
+
+os: linux
+dist: trusty
+
+#compiler:
+#   - gcc
+#   - clang
+
+
+addons:
+  apt:
+    sources:
+      - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
+        key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+      - ubuntu-toolchain-r-test 
+      - llvm-toolchain-trusty-5.0 
+    packages:
+      - cmake
+      - libboost-all-dev
+      - ninja-build
+      - g++-7
+      - clang-5.0
+      - llvm-5.0-dev
+
+before_script:
+    - cmake --version
+    - cd "${TRAVIS_BUILD_DIR}"
+    - mkdir build && cd build
+    - CC=clang-5.0 CXX=clang++-5.0 cmake .. -GNinja -DRAIBLOCKS_TEST=ON -DCMAKE_BUILD_TYPE=Release
+
+script:
+    # build and run tests
+    - cmake --build ${PWD} --
+
+test_script:
+    - ./core_test
