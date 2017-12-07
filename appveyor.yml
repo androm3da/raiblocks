@@ -46,8 +46,6 @@ before_build:
       $env:BOOST_ARCHIVE="boost_$($env:BOOST_FILENAME_VERSION)-bin-msvc-$($env:VISUAL_STUDIO_VERSION)-$($env:ARCHITECTURE).7z"
 
 
-  - cmd: md build
-  - cmd: cd build
   - cmd: cmake -G "%CMAKE_GENERATOR%%CMAKE_GENERATOR_SUFFIX%" -DCMAKE_BUILD_TYPE=%configuration% -DRAIBLOCKS_TEST=ON ..
 
 
