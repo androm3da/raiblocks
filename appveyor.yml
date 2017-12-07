@@ -45,9 +45,9 @@ before_build:
       $env:BOOST_LIBRARYDIR="$($env:BOOST_ROOT)/$($env:LIB_ARCHITECTURE)-msvc-$($env:VISUAL_STUDIO_VERSION)"
       $env:BOOST_ARCHIVE="boost_$($env:BOOST_FILENAME_VERSION)-bin-msvc-$($env:VISUAL_STUDIO_VERSION)-$($env:ARCHITECTURE).7z"
 
-      echo cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE=$env:CONFIGURATION -DBOOST_ROOT="$($env:BOOST_ROOT)" -DRAIBLOCKS_TEST=ON ..
+      echo cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DRAIBLOCKS_TEST=ON ..
 
-      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE=$env:CONFIGURATION -DBOOST_ROOT="$($env:BOOST_ROOT)" -DRAIBLOCKS_TEST=ON ..
+      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DRAIBLOCKS_TEST=ON ..
 
 build_script:
   - ps: cmake --build . --config "$($env:CONFIGURATION)"  -- /m /v:minimal
@@ -57,3 +57,16 @@ test_script:
 
 deploy: off
 
+on_failure:
+  - ps: |
+      # Write the CMake output and error logs to the console
+      If ($env:CONFIGURATION_COMPLETE -eq "False") {
+        If (Test-Path build/CMakeFiles/CMakeOutput.log) {
+          Write-Output "CMakeOutput.log"
+          cat build/CMakeFiles/CMakeOutput.log
+        }
+        If (Test-Path build/CMakeFiles/CMakeError.log) {
+          Write-Output "CMakeError.log"
+          cat build/CMakeFiles/CMakeError.log
+        }
+      }
