@@ -1,5 +1,5 @@
 
-sudo: false
+# sudo: false
 language: cpp
 
 os: linux
@@ -22,22 +22,24 @@ addons:
     packages:
       - cmake
 #     - libboost-all-dev
-      - libboost-filesystem1.58-dev
-      - libboost-system1.58-dev
-      - libboost-log1.58-dev
-      - libboost-thread1.58-dev
+#     - libboost-filesystem1.58-dev
+#     - libboost-system1.58-dev
+#     - libboost-log1.58-dev
+#     - libboost-thread1.58-dev
 #     - libboost-program_options1.58-dev
 #     - libboost-log_setup1.58-dev
 #     - libboost-date_time1.58-dev
-      - libboost-regex1.58-dev
-      - libboost-chrono1.58-dev
-      - libboost-atomic1.58-dev
+#     - libboost-regex1.58-dev
+#     - libboost-chrono1.58-dev
+#     - libboost-atomic1.58-dev
       - ninja-build
       - g++-7
 #     - clang-5.0
 #     - llvm-5.0-dev
 
 before_script:
+    - sudo apt-get update -qq
+    - sudo apt-get install libboost1.58-all-dev
     - cmake --version
     - cd "${TRAVIS_BUILD_DIR}"
     - mkdir build && cd build
