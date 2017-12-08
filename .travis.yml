@@ -1,5 +1,5 @@
 
-# sudo: false
+sudo: false
 language: cpp
 
 os: linux
@@ -17,25 +17,15 @@ addons:
 #       key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
       - ubuntu-toolchain-r-test 
       - llvm-toolchain-trusty-5.0 
-      - sourceline: 'ppa:kojoley/boost'
+#     - sourceline: 'ppa:samuel-bachmann/boost'
+      - sourceline: 'ppa:kzemek/boost'
 
     packages:
       - cmake
-      - libboost-all-dev
-#     - libboost-filesystem1.58-dev
-#     - libboost-system1.58-dev
-#     - libboost-log1.58-dev
-#     - libboost-thread1.58-dev
-#     - libboost-program_options1.58-dev
-#     - libboost-log_setup1.58-dev
-#     - libboost-date_time1.58-dev
-#     - libboost-regex1.58-dev
-#     - libboost-chrono1.58-dev
-#     - libboost-atomic1.58-dev
       - ninja-build
       - g++-7
-#     - clang-5.0
-#     - llvm-5.0-dev
+      - boost1.58
+#     - boost1.60
 
 before_script:
     - cmake --version
