@@ -28,8 +28,9 @@ addons:
     packages:
       - cmake
       - ninja-build
-#     - g++-7 # hits an ICE
-      - g++-6
+      - g++-7 # exhausts memory
+#     - g++-6 # exhausts memory
+      - clang-5.0
 
 before_script:
     - |
@@ -53,7 +54,7 @@ before_script:
     - cmake --version
     - cd "${TRAVIS_BUILD_DIR}"
     - mkdir build && cd build
-    - CC=gcc-6 CXX=g++-6 cmake .. -GNinja -DRAIBLOCKS_TEST=ON -DCMAKE_BUILD_TYPE=Release -DBOOST_ROOT=${DEPS_DIR}/boost
+    - CC=clang-5.0 CXX=clang-5.0 cmake .. -GNinja -DRAIBLOCKS_TEST=ON -DCMAKE_BUILD_TYPE=Release -DBOOST_ROOT=${DEPS_DIR}/boost
 
 script:
     - cmake --build ${PWD} --
