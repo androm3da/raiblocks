@@ -31,7 +31,7 @@ addons:
 
 before_script:
     - |
-      if [ ! -f "${DEPS_DIR}/boost/${BOOST_VERSION}_cached" ]; then
+      if [ -f "${DEPS_DIR}/boost/${BOOST_VERSION}_cached" ]; then
         # create dirs for source and install
         mkdir -p ${DEPS_DIR}/boost${BOOST_VERSION}
         mkdir -p ${DEPS_DIR}/boost
@@ -40,8 +40,8 @@ before_script:
         travis_retry wget --no-check-certificate --quiet -O - ${BOOST_URL} | tar --strip-components=1 -xz -C ${DEPS_DIR}/boost${BOOST_VERSION}
         pushd ${DEPS_DIR}/boost${BOOST_VERSION}
         # configure and install
-        echo ./bootstrap.sh --prefix=${DEPS_DIR}/boost/ --with-libraries=date_time,filesystem,system,log,log_setup,thread,program_options,regex,chrono,atomic
-        ./bootstrap.sh --prefix=${DEPS_DIR}/boost/ --with-libraries=date_time,filesystem,system,log,log_setup,thread,program_options,regex,chrono,atomic
+        echo ./bootstrap.sh --prefix=${DEPS_DIR}/boost/ --with-libraries=date_time,filesystem,system,log,thread,program_options,regex,chrono,atomic
+        ./bootstrap.sh --prefix=${DEPS_DIR}/boost/ --with-libraries=date_time,filesystem,system,log,thread,program_options,regex,chrono,atomic
         echo ./b2 toolset=gcc-7
         ./b2 toolset=gcc-7
         echo ./b2 -d0 install
@@ -59,7 +59,6 @@ before_script:
     - CC=gcc-7 CXX=g++-7 cmake .. -GNinja -DRAIBLOCKS_TEST=ON -DCMAKE_BUILD_TYPE=Release -DBOOST_ROOT=${DEPS_DIR}/boost
 
 script:
-    # build and run tests
     - cmake --build ${PWD} --
 
 test_script:
