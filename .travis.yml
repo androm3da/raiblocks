@@ -57,7 +57,7 @@ before_script:
     - CC=clang-5.0 CXX=clang-5.0 cmake .. -GNinja -DRAIBLOCKS_TEST=ON -DCMAKE_BUILD_TYPE=Release -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_VERBOSE_MAKEFILE=ON 
 
 script:
-    - cmake --build ${PWD} --
+    - cmake --build ${PWD} -- -v
 
 test_script:
     - ./core_test
