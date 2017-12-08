@@ -57,7 +57,7 @@ if (APPLE)
 elseif (WIN32)
 	set (PLATFORM_LINK_FLAGS "")
 else ()
-	set (PLATFORM_LINK_FLAGS "-static-libgcc -static-libstdc++")
+	set (PLATFORM_LINK_FLAGS "-fuse-ld=lld -static-libgcc -static-libstdc++")
 endif (APPLE)
 
 if (RAIBLOCKS_GUI)
