@@ -1,4 +1,4 @@
-shallow_clone: false
+clone_depth: 3
 
 platform:
   - x86
@@ -47,7 +47,7 @@ before_build:
       dir "$($env:BOOST_ROOT)"
       dir "$($env:BOOST_LIBRARYDIR)"
       dir "$($env:BOOST_INCLUDEDIR)"
-      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_LIBRARYDIR="$($env:BOOST_LIBRARYDIR)" -DBOOST_INCLUDEDIR="$($env:BOOST_INCLUDEDIR)" -DBOOST_VERSION="$($env:BOOST_VERSION)" -DBoost_USE_STATIC_LIBS=OFF -DRAIBLOCKS_TEST=ON ..
+      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_VERSION="$($env:BOOST_VERSION)"  -DRAIBLOCKS_TEST=ON ..
 
 
 build_script:
