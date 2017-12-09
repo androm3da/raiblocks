@@ -16,6 +16,7 @@ image:
 
 environment:
     MSVC_DEFAULT_OPTIONS: ON
+    QT_VERSION: 5.9
     BOOST_FILENAME_VERSION: 1_64_0
     BOOST_VERSION: 1.64.0
     CONFIGURATION_COMPLETE: False
@@ -31,7 +32,6 @@ before_build:
       Set-PSDebug -Trace 1
       mkdir build
       cd build
-      $env:generator="Visual Studio 15 2017"
       If ($env:Platform -Match "x86") {
         $env:ARCHITECTURE="32"
       } Else {
@@ -40,7 +40,7 @@ before_build:
       }
       $env:LIB_ARCHITECTURE="lib$($env:ARCHITECTURE)"
 
-      $env:QT_ROOT="C:/qt_$($env:QT_FILENAME_VERSION)/msvc2017_64"
+      $env:QT_ROOT="C:/qt/$($env:QT_VERSION)/msvc2017_64"
 
       $env:BOOST_ROOT="C:/Libraries/boost_$($env:BOOST_FILENAME_VERSION)"
       $env:BOOST_INCLUDEDIR="$($env:BOOST_ROOT)"
