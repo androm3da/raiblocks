@@ -40,20 +40,23 @@ before_build:
       }
       $env:LIB_ARCHITECTURE="lib$($env:ARCHITECTURE)"
 
+      $env:QT_ROOT="C:/qt_$($env:QT_FILENAME_VERSION)/msvc2017_64"
+
       $env:BOOST_ROOT="C:/Libraries/boost_$($env:BOOST_FILENAME_VERSION)"
       $env:BOOST_INCLUDEDIR="$($env:BOOST_ROOT)"
       $env:BOOST_LIBRARYDIR="$($env:BOOST_ROOT)/$($env:LIB_ARCHITECTURE)-msvc-$($env:VISUAL_STUDIO_VERSION)"
       $env:BOOST_ARCHIVE="boost_$($env:BOOST_FILENAME_VERSION)-bin-msvc-$($env:VISUAL_STUDIO_VERSION)-$($env:ARCHITECTURE).7z"
 
-      dir "$($env:BOOST_ROOT)"
-      dir "$($env:BOOST_LIBRARYDIR)"
-      dir "$($env:BOOST_INCLUDEDIR)"
-      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_VERSION="$($env:BOOST_VERSION)"  -DRAIBLOCKS_TEST=ON ..
+      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_VERSION="$($env:BOOST_VERSION)" -DQT_ROOT="$($env:QT_ROOT)" -DRAIBLOCKS_GUI=ON ..
 
 
 build_script:
     - ps: $env:CONFIGURATION_COMPLETE=$TRUE
     - ps: cmake --build . --config "$($env:CONFIGURATION)"  -- /m /v:minimal
+
+after_build:
+  - ps: cpack -G NSIS --config "$($env:CONFIGURATION)"
+  - ps: cpack -G ZIP  --config "$($env:CONFIGURATION)"
 
 test_script:
   - build\core_test
