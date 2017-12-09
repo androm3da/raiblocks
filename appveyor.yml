@@ -1,0 +1,68 @@
+shallow_clone: false
+
+platform:
+  - x86
+  - x64
+
+configuration:
+  - Debug
+  - Release
+
+image:
+  - Visual Studio 2017
+
+# https://www.appveyor.com/docs/build-environment/#boost 
+
+environment:
+    MSVC_DEFAULT_OPTIONS: ON
+    BOOST_FILENAME_VERSION: 1_58_0
+    BOOST_VERSION: 1.58.0
+    CONFIGURATION_COMPLETE: False
+    matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: Visual Studio 14 2015
+      VISUAL_STUDIO_INTERNAL_VERSION: 140
+      VISUAL_STUDIO_VERSION: 14.0
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: Visual Studio 15 2017
+      VISUAL_STUDIO_INTERNAL_VERSION: 141
+      VISUAL_STUDIO_VERSION: 14.1
+
+
+before_build:
+  - ps: |
+      mkdir build
+      cd build
+      $env:generator="Visual Studio 15 2017"
+      If ($env:Platform -Match "x86") {
+        $env:ARCHITECTURE="32"
+      } Else {
+        $env:ARCHITECTURE="64"
+        $env:CMAKE_GENERATOR_SUFFIX=" Win64"
+      }
+      $env:LIB_ARCHITECTURE="lib$($env:ARCHITECTURE)"
+
+      $env:BOOST_ROOT="C:/Libraries/boost_$($env:BOOST_FILENAME_VERSION)"
+      $env:BOOST_INCLUDEDIR="$($env:BOOST_ROOT)"
+      $env:BOOST_LIBRARYDIR="$($env:BOOST_ROOT)/$($env:LIB_ARCHITECTURE)-msvc-$($env:VISUAL_STUDIO_VERSION)"
+      $env:BOOST_ARCHIVE="boost_$($env:BOOST_FILENAME_VERSION)-bin-msvc-$($env:VISUAL_STUDIO_VERSION)-$($env:ARCHITECTURE).7z"
+
+      dir "$($env:BOOST_ROOT)"
+
+      echo cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_LIBRARYDIR="$($env:BOOST_LIBRARYDIR)" -DBOOST_INCLUDEDIR="$($env:BOOST_INCLUDEDIR)"  -DRAIBLOCKS_TEST=ON ..
+
+      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_LIBRARYDIR="$($env:BOOST_LIBRARYDIR)" -DBOOST_INCLUDEDIR="$($env:BOOST_INCLUDEDIR)"  -DRAIBLOCKS_TEST=ON ..
+
+build_script:
+    - ps: $env:CONFIGURATION_COMPLETE=$TRUE
+    - ps: cmake --build . --config "$($env:CONFIGURATION)"  -- /m /v:minimal
+
+test_script:
+  - build\core_test
+
+deploy: off
+
+on_failure:
+  - appveyor PushArtifact CMakeFiles/CMakeOutput.log
+  - appveyor PushArtifact CMakeFiles/CMakeError.log
+
