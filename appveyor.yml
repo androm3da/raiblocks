@@ -50,11 +50,12 @@ before_build:
       $env:BOOST_LIBRARYDIR="$($env:BOOST_ROOT)/$($env:LIB_ARCHITECTURE)-msvc-$($env:VISUAL_STUDIO_VERSION)"
       $env:BOOST_ARCHIVE="boost_$($env:BOOST_FILENAME_VERSION)-bin-msvc-$($env:VISUAL_STUDIO_VERSION)-$($env:ARCHITECTURE).7z"
 
-      dir "C:/qt/$($env:QT_VERSION)"
-      dir "C:/qt/$($env:Qt5_DIR)"
-      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_VERSION="$($env:BOOST_VERSION)" -DQt5_DIR="$($env:Qt5_DIR)" -DRAIBLOCKS_GUI=ON ..
+      dir "C:/qt/$($env:QT_ROOT)"
+      dir "$($env:Qt5_DIR)"
+      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_VERSION="$($env:BOOST_VERSION)" -DQt5_DIR="$($env:Qt5_DIR)" -DRAIBLOCKS_TEST=ON -DRAIBLOCKS_GUI=ON ..
 
 
+# TODO: link errors, unable to resolve upnp symbols
 build_script:
     - ps: $env:CONFIGURATION_COMPLETE=$TRUE
     - ps: cmake --build . --config "$($env:CONFIGURATION)"  -- /m /v:minimal
@@ -65,6 +66,7 @@ after_build:
 
 test_script:
   - build\core_test
+  - build\qt_test
 
 deploy: off
 
