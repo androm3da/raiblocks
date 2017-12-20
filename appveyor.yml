@@ -1,0 +1,79 @@
+install:
+    - git submodule sync
+    - git submodule update --init --recursive
+
+platform:
+  - x86
+  - x64
+
+configuration:
+  - Debug
+  - Release
+
+image:
+  - Visual Studio 2017
+
+# https://www.appveyor.com/docs/build-environment/#boost 
+
+environment:
+    MSVC_DEFAULT_OPTIONS: ON
+    QT_VERSION: 5.9
+    BOOST_FILENAME_VERSION: 1_63_0
+    BOOST_VERSION: 1.63.0
+    CONFIGURATION_COMPLETE: False
+    # Visual Studio 2017 miniupnpc CMake issue see known limitations:
+    #       https://cmake.org/cmake/help/v3.5/prop_sf/COMPILE_DEFINITIONS.html
+    matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      CMAKE_GENERATOR: Visual Studio 14 2015
+      VISUAL_STUDIO_INTERNAL_VERSION: 141
+      VISUAL_STUDIO_VERSION: 14.1
+
+
+before_build:
+  - ps: |
+      Set-PSDebug -Trace 1
+      mkdir build
+      cd build
+      If ($env:Platform -Match "x86") {
+        $env:ARCHITECTURE="32"
+        $env:qt_buildtarget="msvc2015"
+      } Else {
+        $env:ARCHITECTURE="64"
+        $env:CMAKE_GENERATOR_SUFFIX=" Win64"
+        $env:qt_buildtarget="msvc2015_64"
+      }
+      $env:LIB_ARCHITECTURE="lib$($env:ARCHITECTURE)"
+
+      $env:QT_ROOT="C:/qt/$($env:QT_VERSION)/$($env:qt_buildtarget)"
+      $env:Qt5_DIR="$($env:QT_ROOT)/lib/cmake/Qt5"
+
+      $env:BOOST_ROOT="C:/Libraries/boost_$($env:BOOST_FILENAME_VERSION)"
+      $env:BOOST_INCLUDEDIR="$($env:BOOST_ROOT)"
+      $env:BOOST_LIBRARYDIR="$($env:BOOST_ROOT)/$($env:LIB_ARCHITECTURE)-msvc-$($env:VISUAL_STUDIO_VERSION)"
+      $env:BOOST_ARCHIVE="boost_$($env:BOOST_FILENAME_VERSION)-bin-msvc-$($env:VISUAL_STUDIO_VERSION)-$($env:ARCHITECTURE).7z"
+
+      dir "$($env:QT_ROOT)"
+      dir "$($env:Qt5_DIR)"
+      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_VERSION="$($env:BOOST_VERSION)" -DQt5_DIR="$($env:Qt5_DIR)" -DRAIBLOCKS_TEST=ON -DRAIBLOCKS_GUI=ON ..
+
+
+# TODO: link errors, unable to resolve upnp symbols
+build_script:
+    - ps: $env:CONFIGURATION_COMPLETE=$TRUE
+    - ps: cmake --build . --config "$($env:CONFIGURATION)"  -- /m /v:normal
+
+after_build:
+  - ps: cpack -G NSIS --config "$($env:CONFIGURATION)"
+  - ps: cpack -G ZIP  --config "$($env:CONFIGURATION)"
+
+test_script:
+  - build\core_test
+  - build\qt_test
+
+deploy: off
+
+on_failure:
+  - appveyor PushArtifact CMakeFiles/CMakeOutput.log
+  - appveyor PushArtifact CMakeFiles/CMakeError.log
+

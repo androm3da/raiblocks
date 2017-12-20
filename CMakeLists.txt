@@ -56,7 +56,7 @@ if (APPLE)
 elseif (WIN32)
 	set (PLATFORM_LINK_FLAGS "")
 else ()
-	set (PLATFORM_LINK_FLAGS "-static-libgcc -static-libstdc++")
+	set (PLATFORM_LINK_FLAGS "-fuse-ld=lld -static-libgcc -static-libstdc++")
 endif (APPLE)
 
 if (RAIBLOCKS_GUI)
@@ -72,9 +72,12 @@ endif (RAIBLOCKS_GUI)
 
 include_directories (${CMAKE_SOURCE_DIR})
 
-set(Boost_USE_STATIC_LIBS        ON)
-set(Boost_USE_MULTITHREADED      ON)
-find_package (Boost 1.57.0 REQUIRED COMPONENTS date_time filesystem system log log_setup thread program_options regex chrono atomic)
+set(Boost_USE_STATIC_LIBS        ON CACHE BOOL "")
+set(Boost_USE_MULTITHREADED      ON CACHE BOOL "")
+
+set(BOOST_VERSION "1.57.0" CACHE STRING "" FORCE)
+
+find_package (Boost ${BOOST_VERSION} REQUIRED COMPONENTS date_time filesystem system log log_setup thread program_options regex chrono atomic)
 include_directories (${Boost_INCLUDE_DIR})
 
 add_library (ed25519
@@ -100,6 +103,9 @@ include_directories ("gtest/include")
 include_directories (beast/include)
 
 set (UPNPC_BUILD_SHARED OFF CACHE BOOL "")
+set (UPNPC_BUILD_STATIC ON CACHE BOOL "")
+set (WINSOCK2_LIBRARY Ws2_32 CACHE STRING "")
+set (IPHLPAPI_LIBRARY iphlpapi CACHE STRING "")
 add_subdirectory (miniupnp/miniupnpc)
 include_directories (miniupnp/miniupnpc)
 
