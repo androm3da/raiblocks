@@ -58,7 +58,7 @@ before_build:
 # TODO: link errors, unable to resolve upnp symbols
 build_script:
     - ps: $env:CONFIGURATION_COMPLETE=$TRUE
-    - ps: cmake --build . --config "$($env:CONFIGURATION)"  -- /m /v:minimal
+    - ps: cmake --build . --config "$($env:CONFIGURATION)"  -- /m /v:detailed
 
 after_build:
   - ps: cpack -G NSIS --config "$($env:CONFIGURATION)"
