@@ -52,7 +52,7 @@ before_build:
 
       dir "C:/qt/$($env:QT_ROOT)"
       dir "$($env:Qt5_DIR)"
-      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_VERSION="$($env:BOOST_VERSION)" -DQt5_DIR="$($env:Qt5_DIR)" -DRAIBLOCKS_TEST=ON -DRAIBLOCKS_GUI=ON ..
+      cmake -G "$($env:CMAKE_GENERATOR)$($env:CMAKE_GENERATOR_SUFFIX)"   -DCMAKE_BUILD_TYPE="$($env:CONFIGURATION)" -DBOOST_ROOT="$($env:BOOST_ROOT)" -DBOOST_VERSION="$($env:BOOST_VERSION)" -DQt5_DIR="$($env:Qt5_DIR)" -DRAIBLOCKS_TEST=ON -DRAIBLOCKS_GUI=ON -DCMAKE_VERBOSE_MAKEFILE=ON ..
 
 
 # TODO: link errors, unable to resolve upnp symbols
