@@ -104,6 +104,7 @@ include_directories ("gtest/include")
 include_directories (beast/include)
 
 set (UPNPC_BUILD_SHARED OFF CACHE BOOL "")
+set (UPNPC_BUILD_STATIC ON CACHE BOOL "")
 set (WINSOCK2_LIBRARY Ws2_32 CACHE STRING "")
 set (IPHLPAPI_LIBRARY iphlpapi CACHE STRING "")
 add_subdirectory (miniupnp/miniupnpc)
