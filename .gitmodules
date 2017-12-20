@@ -3,7 +3,7 @@
 	url = https://github.com/boostorg/beast.git
 [submodule "miniupnp"]
 	path = miniupnp
-	url = https://github.com/miniupnp/miniupnp.git
+	url = https://github.com/androm3da/miniupnp.git
 [submodule "cryptopp"]
 	path = cryptopp
 	url = https://github.com/weidai11/cryptopp.git
