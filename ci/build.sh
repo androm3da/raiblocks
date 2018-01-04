@@ -98,7 +98,7 @@ run_build() {
        ${QT_CFG} \
        ..
 
-    cmake --build ${PWD} -- -v -j1
+    cmake --build ${PWD} -- -j1
     cmake --build ${PWD} -- install -v
     cpack -G ${CPACK_TYPE} ${PWD}
 }
