@@ -68,6 +68,13 @@ else
     QT_CFG="-DQt5_DIR=${QT_LOC}"
 fi
 
+which ninja
+if [[ ${?} -ne 0 ]]; then
+    GEN="Unix Makefiles"
+else
+    GEN="Ninja"
+fi
+
 set -o nounset
 
 run_build() {
@@ -75,7 +82,7 @@ run_build() {
 
     mkdir ${build_dir}
     cd ${build_dir}
-    cmake -GNinja \
+    cmake -G${GEN} \
        ${TESTNET_CFG} \
        -DRAIBLOCKS_TEST=ON \
        -DRAIBLOCKS_GUI=ON \
