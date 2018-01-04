@@ -1,0 +1,45 @@
+dist: trusty
+sudo: required
+
+language: cpp
+
+os:
+  - linux
+
+cache:
+  apt: true
+  ccache: true
+  directories:
+    - $HOME/boost
+
+env:
+  global:
+    - BOOST_URL=http://ftp.osuosl.org/pub/blfs/conglomeration/boost/boost_1_63_0.tar.bz2
+  osx:
+    - QT_LOC=/usr/local/opt/qt/lib/cmake/Qt5
+  matrix:
+    - TEST=1
+    - TEST=0
+
+compiler:
+  - gcc
+  - clang
+
+addons:
+  apt:
+    packages:
+      - qtbase5-dev
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install qt5; fi
+
+before_script:
+      - if [ ! -f $HOME/boost/.built ]; then BOOST_ROOT=$HOME/boost/$TRAVIS_OS_NAME/$CC ./ci/bootstrap_boost.sh; fi
+
+script:
+  - cd $TRAVIS_BUILD_DIR
+  - ./ci/build.sh
+
+after_script:
+  - ./ci/test.sh

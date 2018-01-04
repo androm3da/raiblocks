@@ -20,11 +20,11 @@ else
     CPACK_TYPE="TBZ2"
 fi
 
-if [[ ${NO_SIMD} -eq 1 ]]; then
-    NOSIMD_CFG="-DRAIBLOCKS_SIMD_OPTIMIZATIONS=OFF"
+if [[ ${SIMD} -eq 1 ]]; then
+    SIMD_CFG="-DRAIBLOCKS_SIMD_OPTIMIZATIONS=ON"
     CRYPTOPP_CFG="-DCRYPTOPP_CUSTOM=ON"
 else
-    NOSIMD_CFG=""
+    SIMD_CFG=""
     CRYPTOPP_CFG=""
 fi
 
@@ -38,6 +38,12 @@ else
     SANITIZERS=""
 fi
 
+if [[ ${BOOST_DYN} -eq 1 ]]; then
+    BOOST_DYN_CFG="-DBoost_USE_STATIC_LIBS=OFF"
+else
+    BOOST_DYN_CFG=""
+fi
+
 if [[ ${BOOST_ROOT} -ne "" ]]; then
     BOOST_CFG="-DBOOST_ROOT='${BOOST_ROOT}'"
 else
@@ -49,6 +55,19 @@ if [[ ${FLAVOR-_} == "_" ]]; then
     FLAVOR=""
 fi
 
+if [[ ${TEST} -eq 1 ]]; then
+    TESTNET_CFG="-DACTIVE_NETWORK=rai_test_network"
+    SANITIZERS="-DRAIBLOCKS_ASAN=ON"
+else
+    TESTNET_CFG=""
+fi
+
+if [[ ${QT_LOC-_} == "_" ]]; then
+    QT_CFG=""
+else
+    QT_CFG="-DQt5_DIR=${QT_LOC}"
+fi
+
 set -o nounset
 
 run_build() {
@@ -57,7 +76,7 @@ run_build() {
     mkdir ${build_dir}
     cd ${build_dir}
     cmake -GNinja \
-       -DACTIVE_NETWORK=rai_test_network \
+       ${TESTNET_CFG} \
        -DRAIBLOCKS_TEST=ON \
        -DRAIBLOCKS_GUI=ON \
        -DCMAKE_BUILD_TYPE=Debug \
@@ -65,12 +84,14 @@ run_build() {
        -DCMAKE_INSTALL_PREFIX="../install" \
        ${CRYPTOPP_CFG} \
        ${DISTRO_CFG} \
-       ${NOSIMD_CFG} \
+       ${SIMD_CFG} \
        ${BOOST_CFG} \
+       ${BOOST_DYN_CFG} \
        ${SANITIZERS} \
+       ${QT_CFG} \
        ..
 
-    cmake --build ${PWD} -- -v
+    cmake --build ${PWD} -- -v -j1
     cmake --build ${PWD} -- install -v
     cpack -G ${CPACK_TYPE} ${PWD}
 }
