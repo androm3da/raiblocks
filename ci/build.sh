@@ -70,7 +70,7 @@ fi
 
 which ninja
 if [[ ${?} -ne 0 ]]; then
-    GEN="'Unix Makefiles'"
+    GEN='Unix Makefiles'
 else
     GEN="Ninja"
 fi
@@ -82,7 +82,7 @@ run_build() {
 
     mkdir ${build_dir}
     cd ${build_dir}
-    cmake -G${GEN} \
+    cmake -G"${GEN}" \
        ${TESTNET_CFG} \
        -DRAIBLOCKS_TEST=ON \
        -DRAIBLOCKS_GUI=ON \
