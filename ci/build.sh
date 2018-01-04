@@ -70,7 +70,7 @@ fi
 
 which ninja
 if [[ ${?} -ne 0 ]]; then
-    GEN="Unix Makefiles"
+    GEN="'Unix Makefiles'"
 else
     GEN="Ninja"
 fi

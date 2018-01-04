@@ -42,4 +42,4 @@ script:
   - ./ci/build.sh
 
 after_script:
-  - ./ci/test.sh
+  - if [[ ${TEST} -eq 1 ]]; then ./ci/test.sh; fi
