@@ -44,10 +44,10 @@ else
     BOOST_DYN_CFG=""
 fi
 
-if [[ ${BOOST_ROOT} -ne "" ]]; then
-    BOOST_CFG="-DBOOST_ROOT='${BOOST_ROOT}'"
-else
+if [[ "${BOOST_ROOT}" = "" ]]; then
     BOOST_CFG=""
+else
+    BOOST_CFG="-DBOOST_ROOT='${BOOST_ROOT}'"
 fi
 
 BUSYBOX_BASH=${BUSYBOX_BASH-0}
