@@ -25,6 +25,6 @@ else
 fi
 
 # Exclude flaky or stalling tests.
-#./core_test --gtest_filter="-gap_cache.gap_bootstrap:bulk_pull.get_next_on_open:system.system_genesis"
+./core_test --gtest_filter="-gap_cache.gap_bootstrap:bulk_pull.get_next_on_open:system.system_genesis"
 
 popd
