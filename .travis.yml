@@ -5,6 +5,7 @@ language: cpp
 
 os:
   - linux
+# - osx
 
 cache:
   apt: true
@@ -36,7 +37,8 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install qt5; fi
 
 before_script:
-      - if [ ! -f $HOME/boost/.built ]; then  ./ci/bootstrap_boost.sh; fi
+# - if [ ! -f $HOME/boost/.built ]; then  ./ci/bootstrap_boost.sh; fi
+  - ./ci/bootstrap_boost.sh
 
 script:
   - cd $TRAVIS_BUILD_DIR

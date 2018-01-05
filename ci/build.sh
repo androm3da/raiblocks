@@ -76,6 +76,8 @@ else
 fi
 
 set -o nounset
+set -o errexit
+set -o xtrace
 
 run_build() {
     build_dir=build_${FLAVOR}
