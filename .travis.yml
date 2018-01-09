@@ -23,6 +23,22 @@ matrix:
         - docker
     - os: osx
 
+allow_failures:
+    - os: linux
+      dist: trusty
+      sudo: required
+      env:
+        - TSAN=1
+      services:
+        - docker
+    - os: linux
+      dist: trusty
+      sudo: required
+      env:
+        - ASAN=1
+      services:
+        - docker
+
 compiler:
   - clang
 

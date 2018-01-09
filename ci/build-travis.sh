@@ -42,9 +42,4 @@ fi
 
 popd
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    TRUE_CMD=gtrue
-else
-    TRUE_CMD=true
-fi
-./ci/test.sh ./build || ${TRUE_CMD}
+./ci/test.sh ./build
