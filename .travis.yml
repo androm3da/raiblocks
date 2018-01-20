@@ -3,17 +3,18 @@ dist: trusty
 sudo: required
 services: docker
 
+env:
+  matrix:
+    - TSAN=1
+    - ASAN=1
+
 matrix:
   include:
-    - os: linux
+    - os: osx
   allow_failures:
-    - os: linux
       env:
         - TSAN=1
-    - os: linux
-      env:
         - ASAN=1
-    - os: osx
 
 compiler:
   - clang
