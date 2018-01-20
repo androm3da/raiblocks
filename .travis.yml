@@ -7,10 +7,14 @@ env:
   matrix:
     - TSAN=1
     - ASAN=1
+    - RELEASE=1
 
 matrix:
   include:
+    - os: linux
     - os: osx
+
+matrix:
   allow_failures:
       env:
         - TSAN=1
