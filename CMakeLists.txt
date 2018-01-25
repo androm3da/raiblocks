@@ -95,6 +95,8 @@ if (RAIBLOCKS_GUI)
 	endif (WIN32)
 
 	find_package (Qt5 COMPONENTS Core Gui Widgets Quick Test ${PLATFORM_QT_PACKAGES})
+	find_package(Qt5Quick REQUIRED)
+	find_package(Qt5Qml REQUIRED)
 	include_directories (${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS} ${Qt5Quick_INCLUDE_DIRS} ${Qt5Test_INCLUDE_DIRS})
 endif (RAIBLOCKS_GUI)
 
